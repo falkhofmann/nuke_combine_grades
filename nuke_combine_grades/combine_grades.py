@@ -1,7 +1,12 @@
 
 import nuke
 
-GRADE_NODES = ['Grade', 'Multiply', 'Add']
+COLOR_NODES = ['Add', 'Gamma', 'Grade', 'Multiply']
+
+ADD_Order = ['value']
+GAMMA_ORDER = ['value']
+GRADE_ORDER = ['blackpoint', 'whitepoint', 'black', 'white', 'multiply', 'add', 'gamma']
+MULTIPLY_ORDER = ['value']
 
 
 def gather_possible_nodes(selected_node):
@@ -9,7 +14,7 @@ def gather_possible_nodes(selected_node):
     current = selected_node
 
     nodes = [selected_node]
-    while current.dependencies() and current.dependencies()[0].Class() in GRADE_NODES:
+    while current.dependencies() and current.dependencies()[0].Class() in COLOR_NODES:
         current = current.dependencies()[0]
         nodes.append(current)
     return nodes
@@ -45,7 +50,7 @@ def set_up_colorlookup(last_node):
 
 def start():
     start_node = nuke.selectedNode()
-    if not start_node or start_node.Class() not in GRADE_NODES:
+    if not start_node or start_node.Class() not in COLOR_NODES:
         return
 
     nodes = gather_possible_nodes(start_node)
@@ -53,6 +58,8 @@ def start():
     nodes.reverse()
     lut = set_up_colorlookup(last_node)
 
-    for step in frange(0.0, 1.0, 0.1):
-        print float(step)
-        lut['lut'].setValueAt(0.4, float(step), 1)
+    channel_list = ['red', 'green', 'blue']
+    for channel in channel_list:
+        for step in frange(0.0, 1.0, 0.1):
+            print float(step)
+            lut['lut'].setValueAt(0.4, float(step), channel_list.index(channel) + 1)
