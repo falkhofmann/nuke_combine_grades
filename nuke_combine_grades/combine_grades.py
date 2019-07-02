@@ -2,14 +2,16 @@
 import nuke
 
 
-from nodes import Add, Gamma, Grade, Multiply
+import nodes
+import utils
 
+reload(nodes)
 COLOR_NODES = ['Add', 'Gamma', 'Grade', 'Multiply']
 
-NODE_MAP = {'Add': Add,
-            'Gamma': Gamma,
-            'Grade': Grade,
-            'Multiply': Multiply}
+NODE_MAP = {'Add': nodes.Add,
+            'Gamma': nodes.Gamma,
+            'Grade': nodes.Grade,
+            'Multiply': nodes.Multiply}
 
 
 def frange(start, stop=None, step=None):
@@ -57,13 +59,7 @@ def start():
     for step in frange(y_min, y_max + karl, karl):
         step = float(step)
         for node in nodes:
-            calc = NODE_MAP[node.Class()]([step, step, step, step], [0.8, 0.6, 0.4, 0.8], 1.0)
-            for idx, value in enumerate( calc.values_out):
+            args = [step] + utils.prep_args(node)
+            calc = NODE_MAP[node.Class()](*args)
+            for idx, value in enumerate(calc.values_out):
                 lut['lut'].setValueAt(value, step, idx + 1)
-
-
-
-
-
-    # lut = set_up_colorlookup(nodes[0])
-
