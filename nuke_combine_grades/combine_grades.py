@@ -1,23 +1,15 @@
 
 import nuke
 
+
+from nodes import Add, Gamma, Grade, Multiply
+
 COLOR_NODES = ['Add', 'Gamma', 'Grade', 'Multiply']
 
-ADD_Order = ['value']
-GAMMA_ORDER = ['value']
-GRADE_ORDER = ['blackpoint', 'whitepoint', 'black', 'white', 'multiply', 'add', 'gamma']
-MULTIPLY_ORDER = ['value']
-
-
-def gather_possible_nodes(selected_node):
-
-    current = selected_node
-
-    nodes = [selected_node]
-    while current.dependencies() and current.dependencies()[0].Class() in COLOR_NODES:
-        current = current.dependencies()[0]
-        nodes.append(current)
-    return nodes
+NODE_MAP = {'Add': Add,
+            'Gamma': Gamma,
+            'Grade': Grade,
+            'Multiply': Multiply}
 
 
 def frange(start, stop=None, step=None):
@@ -49,17 +41,29 @@ def set_up_colorlookup(last_node):
 
 
 def start():
-    start_node = nuke.selectedNode()
-    if not start_node or start_node.Class() not in COLOR_NODES:
-        return
+    nodes = nuke.selectedNodes()
+    # if not all([node.Class() in COLOR_NODES for node in nodes]):
+    #     return
 
-    nodes = gather_possible_nodes(start_node)
-    last_node = nodes[0]
-    nodes.reverse()
-    lut = set_up_colorlookup(last_node)
 
-    channel_list = ['red', 'green', 'blue']
-    for channel in channel_list:
-        for step in frange(0.0, 1.0, 0.1):
-            print float(step)
-            lut['lut'].setValueAt(0.4, float(step), channel_list.index(channel) + 1)
+    lut = set_up_colorlookup(nodes[0])
+
+    y_min = 0.0
+    y_max = 5.0
+    x_steps = 10
+
+    karl = (y_max-y_min)/float(x_steps)
+
+    for step in frange(y_min, y_max + karl, karl):
+        step = float(step)
+        for node in nodes:
+            calc = NODE_MAP[node.Class()]([step, step, step, step], [0.8, 0.6, 0.4, 0.8], 1.0)
+            for idx, value in enumerate( calc.values_out):
+                lut['lut'].setValueAt(value, step, idx + 1)
+
+
+
+
+
+    # lut = set_up_colorlookup(nodes[0])
+
