@@ -15,7 +15,7 @@ class AbstractNode:
 
     __metaclass__ = ABCMeta
 
-    def __init__(self, values_in=1.0, parameter=[1.0, 1.0, 1.0, 1.0], mix=1.0):
+    def __init__(self, values_in=[1.0, 1.0, 1.0, 1.0], parameter=[1.0, 1.0, 1.0, 1.0], mix=1.0):
         self._value_in = values_in
         self._parameter = parameter
         self._mix = mix
@@ -27,14 +27,14 @@ class AbstractNode:
 
     @property
     def values_out(self):
-        return [self._calculated[idx] * self._mix + (self._value_in * (1.0 - self._mix)) for idx, value in
+        return [self._calculated[idx] * self._mix + (self._value_in[idx] * (1.0 - self._mix)) for idx, value in
                 enumerate(self._calculated)]
 
 
 class Add(AbstractNode):
 
     def evaluate_values(self):
-        self._calculated = [self._value_in + parameter for parameter in self._parameter]
+        self._calculated = [self._value_in[index] + parameter for index, parameter in enumerate(self._parameter)]
 
 
 class ColorLookup(AbstractNode):
@@ -46,7 +46,7 @@ class ColorLookup(AbstractNode):
 class Gamma(AbstractNode):
 
     def evaluate_values(self):
-        self._calculated = [1 / pow(1 / self._value_in, 1 / parameter) for parameter in self._parameter]
+        self._calculated = [1 / pow(1 / self._value_in[index], 1 / parameter) for index, parameter in enumerate(self._parameter)]
 
 
 class Grade(AbstractNode):
@@ -80,7 +80,7 @@ class Multiply(AbstractNode):
 
     def evaluate_values(self):
         print self._value_in
-        self._calculated = [self._value_in * paramter for paramter in self._parameter]
+        self._calculated = [self._value_in[index] * paramter for index, paramter in enumerate(self._parameter)]
 
 
 if __name__ == '__main__':
