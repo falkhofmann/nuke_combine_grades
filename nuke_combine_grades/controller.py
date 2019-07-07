@@ -1,5 +1,8 @@
+
+# Import third-party module
 import nuke
 
+# Import local modules
 from nuke_combine_grades import constants
 from nuke_combine_grades import model
 from nuke_combine_grades import utils

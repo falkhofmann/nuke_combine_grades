@@ -1,12 +1,14 @@
+
+# Import third-party module
 import nuke
 
+# Import local modules
 from nuke_combine_grades import constants
 
 reload(constants)
 
 
 def prep_args(node):
-    knob_values = []
     all_values = []
 
     for knob in constants.KNOBS[node.Class()]:
@@ -17,7 +19,7 @@ def prep_args(node):
         else:
             knob_values = values
 
-    all_values.append(knob_values)
+        all_values.append(knob_values)
     all_values.append(node['mix'].value())
     return all_values
 

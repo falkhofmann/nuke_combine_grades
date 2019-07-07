@@ -1,7 +1,8 @@
+
+# Import local modules
 from nuke_combine_grades import nodes
 
 reload(nodes)
-
 
 KNOBS = {'Add': ['value'],
          'Gamma': ['value'],
