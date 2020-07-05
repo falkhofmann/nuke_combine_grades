@@ -3,6 +3,8 @@
 from abc import ABCMeta, abstractmethod
 import logging
 from math import pow
+from cmath import exp
+from math import pow
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -79,7 +81,10 @@ class Grade(AbstractNode):
         first = self._multiply[idx] * (self._white[idx] - self._black[idx]) / (
                 self._whitepoint[idx] - self._blackpoint[idx])
         second = self._add[idx] + self._black[idx] - first * self._blackpoint[idx]
-        return pow(first * value + second, 1 / self._gamma[idx])
+        third = first * value + second
+        if third <= 0:
+            return first * value + second
+        return pow((first * value) + second, 1 / self._gamma[idx])
 
 
 class Multiply(AbstractNode):

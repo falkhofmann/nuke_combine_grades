@@ -18,7 +18,7 @@ class CombineGradePanel(nukescripts.PythonPanel):
 
         self.minimim.setValue(0)
         self.maximum.setValue(1)
-        self.steps.setValue(10)
+        self.steps.setValue(50)
 
         for knob in (self.range_text, self.minimim, self.maximum, self.step_text, self.steps):
             self.addKnob(knob)

@@ -25,6 +25,7 @@ def start():
     dialog = panel.showModalDialog()
     if not dialog:
         return
-    model.combine_grades(nodes, panel.minimim.value(),
+    model.combine_grades(nodes,
+                         panel.minimim.value(),
                          panel.maximum.value(),
                          panel.steps.value())
