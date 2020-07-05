@@ -1,9 +1,8 @@
+"""Nodes definition and its math."""
 
 # Import built-in modules
 from abc import ABCMeta, abstractmethod
 import logging
-from math import pow
-from cmath import exp
 from math import pow
 
 logging.basicConfig()
@@ -44,6 +43,7 @@ class Add(AbstractNode):
 
 
 class ColorLookup(AbstractNode):
+    """Represent a ColorLookup node inside nuke within its functionality."""
 
     def evaluate_values(self):
         pass
