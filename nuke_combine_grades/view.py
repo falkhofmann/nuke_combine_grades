@@ -1,3 +1,4 @@
+"""View for user interaction."""
 
 # Import third-party module
 import nuke
@@ -5,6 +6,7 @@ import nukescripts
 
 
 class CombineGradePanel(nukescripts.PythonPanel):
+    """User input panel to set minimum, maximum and samples."""
 
     def __init__(self):
         nukescripts.PythonPanel.__init__(self, 'hans')

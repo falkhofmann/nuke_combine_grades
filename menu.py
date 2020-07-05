@@ -6,11 +6,5 @@ import nuke  # pylint: disable = import-error
 # import local modules
 from nuke_combine_grades import controller
 
-
-def dev_2():
-    reload(controller)
-    controller.start()
-
-
-nuke.menu('Nuke').addCommand("fhofmann/combine grades", dev_2, shortcut="f3")
+nuke.menu('Nuke').addCommand("fhofmann/combine grades", controller.start, shortcut="f3")
 

@@ -3,15 +3,21 @@ import nuke
 
 # Import local modules
 from nuke_combine_grades import constants
-from nuke_combine_grades import nodes
 from nuke_combine_grades import utils
-
-reload(constants)
-reload(nodes)
-reload(utils)
 
 
 def frange(start, stop, step):
+    """Iterator for stepping through sequence.
+
+    Args:
+        start (int): Start of range.
+        stop (int): End of range.
+        step (int): Step to go through range.
+
+    Returns:
+        Iterator
+
+    """
     while True:
         if step > 0 and start >= stop:
             break
@@ -21,18 +27,25 @@ def frange(start, stop, step):
         start = start + step
 
 
-def find_upstream_nodes(color_nodes, nd_input):
+def find_upstream_nodes(start_node, nd_input):
+    """Traverse recursively up the tree until no color node is found.
+
+    Args:
+        start_node (nuke.Node): Node to check for dependencies.
+        nd_input (nuke.Node): Node to check for inpts.
+
+    """
     for i_input_idx in range(nd_input.inputs()):
         if nd_input.input(i_input_idx).Class() in constants.COLOR_NODES:
-            color_nodes.append(nd_input.input(i_input_idx))
-        find_upstream_nodes(color_nodes, nd_input.input(i_input_idx))
+            start_node.append(nd_input.input(i_input_idx))
+        find_upstream_nodes(start_node, nd_input.input(i_input_idx))
 
 
 def set_up_colorlookup(top_color_node):
     """Create and set up ColorLookup node to use RGBA.
 
     Returns:
-        nuke.node: New created node.
+        nuke.node: New created ColorLookup node.
 
     """
 
@@ -55,7 +68,15 @@ def set_up_colorlookup(top_color_node):
 
 
 def combine_grades(user_nodes, minimum, maximum, steps):
+    """Bake all accepted color nodes into one color lookup.
 
+    Args:
+        user_nodes (list):  User selected nodes.
+        minimum (int): Lower end of range to rasterize.
+        maximum (int): Upper end of range to rasterize.
+        steps (int): Amount of samples used.
+
+    """
     node = user_nodes[0]
     color_nodes = list()
     if node.Class() in constants.COLOR_NODES:

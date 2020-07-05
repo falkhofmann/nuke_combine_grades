@@ -1,3 +1,4 @@
+"""Util functions to use across package."""
 
 # Import third-party module
 import nuke
@@ -5,10 +6,17 @@ import nuke
 # Import local modules
 from nuke_combine_grades import constants
 
-reload(constants)
-
 
 def prep_args(node):
+    """Prepare arguments work with nodes classes.
+
+    Args:
+        node (nuke.Node):  Node to get knob data from.
+
+    Returns:
+        list: All relevant knob data for baking.
+
+    """
     all_values = []
 
     for knob in constants.KNOBS[node.Class()]:
@@ -25,6 +33,7 @@ def prep_args(node):
 
 
 def start_up_check():
+    """Verify if selected nodes are valid node classes."""
     nodes = nuke.selectedNodes()
     if not all([node.Class() in constants.COLOR_NODES for node in nodes]):
         return
